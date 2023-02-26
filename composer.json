@@ -3,6 +3,7 @@
     "description": "Documentation generator for Symfony projects.",
     "type": "library",
     "license": "MIT",
+    "version": "0.0.1",
     "autoload": {
         "psr-4": {
             "Nvkode\\Nvdoc\\": "src/"
