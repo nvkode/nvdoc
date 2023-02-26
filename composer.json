@@ -1,0 +1,21 @@
+{
+    "name": "nvkode/nvdoc",
+    "description": "Documentation generator for Symfony projects.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nvkode\\Nvdoc\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mykyta Melnyk",
+            "email": "liswelus@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    }
+}
