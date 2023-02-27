@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Base library class
+ * PHP Version >= 8.1
+ *
+ * @category Nvdoc
+ * @package  Nvdoc
+ * @author   Mykyta Melnyk <liswelus@gmail.com>
+ * @license  MIT <https://github.com/nvkode/nvdoc/blob/development/LICENSE>
+ * @link     https://github.com/nvkode/nvdoc
+ */
+
 declare(strict_types=1);
 
 namespace Nvkode\Nvdoc;
@@ -9,35 +20,52 @@ use Exception;
 use ReflectionClass;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Nvdoc Class
+ *
+ * @category Base
+ * @package  Nvdoc
+ * @author   Mykyta Melnyk <liswelus@gmail.com>
+ * @license  MIT <https://github.com/nvkode/nvdoc/blob/development/LICENSE>
+ * @link     https://github.com/nvkode/nvdoc
+ */
 class Nvdoc
 {
 
 
     /**
-     * @var string $rootDirectory
+     * Project root directory
+     *
+     * @var string $_rootDirectory
      */
-    private string $rootDirectory;
+    private string $_rootDirectory;
 
 
     /**
-     * @var Finder $finder
+     * Symfony Finder for searching files' namespaces
+     *
+     * @var Finder $_finder
      */
-    private Finder $finder;
+    private Finder $_finder;
 
 
     /**
-     * @param string $rootDirectory
+     * Constructor
+     *
+     * @param string $rootDirectory Project root directory
      */
     public function __construct(
         string $rootDirectory
     ) {
-        $this->rootDirectory = $rootDirectory;
-        $this->finder        = new Finder();
+        $this->_rootDirectory = $rootDirectory;
+        $this->_finder        = new Finder();
     }
 
 
     /**
-     * @return string
+     * Get version from composer.json
+     *
+     * @return string composer.json version
      */
     public function getVersion(): string
     {
@@ -53,13 +81,19 @@ class Nvdoc
 
 
     /**
-     * @return array<string, ReflectionClass>
+     * Find all files and parse with ReflectionClass.
+     * These information can be used for generating
+     * docs templates in the future.
+     *
+     * @param string $dir Destination directory path
+     *
+     * @return array<string, mixed> Return all necessary elements from ReflectionClass
      */
     public function getFilesInformation(string $dir): array
     {
         $information = [];
 
-        foreach ($this->findFiles($dir) as $file) {
+        foreach ($this->_findFiles($dir) as $file) {
             try {
                 $class = new ReflectionClass($file);
 
@@ -84,20 +118,22 @@ class Nvdoc
 
 
     /**
-     * @param string $dir
+     * Find all files in directory
+     *
+     * @param string $dir Destination directory path
      *
      * @return array
      */
-    private function findFiles(string $dir): array
+    private function _findFiles(string $dir): array
     {
         $files = [];
 
-        $this->finder->files()->in($dir);
+        $this->_finder->files()->in($dir);
 
-        if ($this->finder->hasResults() === true) {
-            $namespaces = $this->getDefinedNamespaces();
+        if ($this->_finder->hasResults() === true) {
+            $namespaces = $this->_getDefinedNamespaces();
 
-            foreach ($this->finder as $file) {
+            foreach ($this->_finder as $file) {
                 foreach ($namespaces as $namespace => $path) {
                     $className = sprintf(
                         "%s\\%s",
@@ -118,12 +154,14 @@ class Nvdoc
 
 
     /**
+     * Get all defined PSR-4 namespaces in composer.json
+     *
      * @return array<string, string>
      */
-    private function getDefinedNamespaces(): array
+    private function _getDefinedNamespaces(): array
     {
         try {
-            $composerConfig = file_get_contents(sprintf('%s/composer.json', $this->rootDirectory));
+            $composerConfig = file_get_contents(sprintf('%s/composer.json', $this->_rootDirectory));
 
             if ($composerConfig !== false) {
                 $composerConfig = json_decode($composerConfig);
