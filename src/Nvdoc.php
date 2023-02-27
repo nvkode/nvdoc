@@ -6,6 +6,7 @@ namespace Nvkode\Nvdoc;
 
 use Composer\InstalledVersions;
 use Exception;
+use ReflectionClass;
 use Symfony\Component\Finder\Finder;
 
 class Nvdoc
@@ -50,12 +51,44 @@ class Nvdoc
 
     }//end getVersion()
 
+
+    /**
+     * @return array<string, ReflectionClass>
+     */
+    public function getFilesInformation(string $dir): array
+    {
+        $information = [];
+
+        foreach ($this->findFiles($dir) as $file) {
+            try {
+                $class = new ReflectionClass($file);
+
+                $information[$class->getName()] = [
+                    'methods'     => $class->getMethods(),
+                    'attributes'  => $class->getAttributes(),
+                    'constants'   => $class->getConstants(),
+                    'doc_comment' => $class->getDocComment(),
+                    'interfaces'  => $class->getInterfaceNames(),
+                    'namespace'   => $class->getNamespaceName(),
+                    'properties'  => $class->getProperties(),
+                    'traits'      => $class->getTraits(),
+                ];
+            } catch (Exception) {
+                // Do nothing.
+            }
+        }
+
+        return $information;
+
+    }//end getFilesInformation()
+
+
     /**
      * @param string $dir
      *
      * @return array
      */
-    public function findFiles(string $dir): array
+    private function findFiles(string $dir): array
     {
         $files = [];
 
