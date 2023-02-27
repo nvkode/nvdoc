@@ -54,24 +54,6 @@ class Nvdoc
 
 
     /**
-     * Get version from composer.json
-     *
-     * @return string composer.json version
-     */
-    public function getVersion(): string
-    {
-        $rootPackage = InstalledVersions::getRootPackage();
-
-        if (array_key_exists('version', $rootPackage) === true) {
-            return $rootPackage['version'];
-        }
-
-        return '0.0.1';
-
-    }//end getVersion()
-
-
-    /**
      * Find all files and parse with ReflectionClass.
      * These information can be used for generating
      * docs templates in the future.
