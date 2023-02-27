@@ -17,8 +17,8 @@ namespace Nvkode\Nvdoc;
 
 use Composer\InstalledVersions;
 use Exception;
+use Nvkode\Nvdoc\Helpers\FileHelper;
 use ReflectionClass;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Nvdoc Class
@@ -34,19 +34,9 @@ class Nvdoc
 
 
     /**
-     * Project root directory
-     *
-     * @var string $_rootDirectory
+     * @var FileHelper $fileHelper Helper for getting namespaces and files
      */
-    private string $_rootDirectory;
-
-
-    /**
-     * Symfony Finder for searching files' namespaces
-     *
-     * @var Finder $_finder
-     */
-    private Finder $_finder;
+    private FileHelper $fileHelper;
 
 
     /**
@@ -57,8 +47,7 @@ class Nvdoc
     public function __construct(
         string $rootDirectory
     ) {
-        $this->_rootDirectory = $rootDirectory;
-        $this->_finder        = new Finder();
+        $this->fileHelper = new FileHelper($rootDirectory);
     }
 
 
@@ -93,7 +82,7 @@ class Nvdoc
     {
         $information = [];
 
-        foreach ($this->_findFiles($dir) as $file) {
+        foreach ($this->fileHelper->findFiles($dir) as $file) {
             try {
                 $class = new ReflectionClass($file);
 
@@ -115,66 +104,6 @@ class Nvdoc
         return $information;
 
     }//end getFilesInformation()
-
-
-    /**
-     * Find all files in directory
-     *
-     * @param string $dir Destination directory path
-     *
-     * @return array
-     */
-    private function _findFiles(string $dir): array
-    {
-        $files = [];
-
-        $this->_finder->files()->in($dir);
-
-        if ($this->_finder->hasResults() === true) {
-            $namespaces = $this->_getDefinedNamespaces();
-
-            foreach ($this->_finder as $file) {
-                foreach ($namespaces as $namespace => $path) {
-                    $className = sprintf(
-                        "%s\\%s",
-                        rtrim($namespace, '\\'),
-                        str_replace('/', '\\', str_replace('.php', '', $file->getRelativePathname()))
-                    );
-
-                    if (class_exists($className) === true) {
-                        $files[] = $className;
-                    }
-                }
-            }
-        }
-
-        return $files;
-
-    }//end findFiles()
-
-
-    /**
-     * Get all defined PSR-4 namespaces in composer.json
-     *
-     * @return array<string, string>
-     */
-    private function _getDefinedNamespaces(): array
-    {
-        try {
-            $composerConfig = file_get_contents(sprintf('%s/composer.json', $this->_rootDirectory));
-
-            if ($composerConfig !== false) {
-                $composerConfig = json_decode($composerConfig);
-
-                return (array) $composerConfig->autoload->{'psr-4'};
-            }
-        } catch (Exception) {
-            // Do nothing on error.
-        }
-
-        return [];
-
-    }//end getDefinedNamespaces()
 
 
 }//end class

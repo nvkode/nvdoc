@@ -3,11 +3,12 @@
     "description": "Documentation generator for Symfony projects.",
     "type": "library",
     "license": "MIT",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "autoload": {
         "psr-4": {
             "Nvkode\\Nvdoc\\": "src/",
-            "Nvkode\\Nvdoc\\Tests\\": "tests/"
+            "Nvkode\\Nvdoc\\Tests\\": "tests/",
+            "Nvkode\\Nvdoc\\Helpers\\": "src/Helpers"
         }
     },
     "authors": [
