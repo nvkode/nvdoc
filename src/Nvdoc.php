@@ -34,9 +34,11 @@ class Nvdoc
 
 
     /**
-     * @var FileHelper $fileHelper Helper for getting namespaces and files
+     * Helper for working with files
+     *
+     * @var FileHelper $fileHelper File Helper
      */
-    private FileHelper $fileHelper;
+    private FileHelper $_fileHelper;
 
 
     /**
@@ -47,7 +49,7 @@ class Nvdoc
     public function __construct(
         string $rootDirectory
     ) {
-        $this->fileHelper = new FileHelper($rootDirectory);
+        $this->_fileHelper = new FileHelper($rootDirectory);
     }
 
 
@@ -76,13 +78,13 @@ class Nvdoc
      *
      * @param string $dir Destination directory path
      *
-     * @return array<string, mixed> Return all necessary elements from ReflectionClass
+     * @return array<string, mixed> Return class informations from ReflectionClass
      */
     public function getFilesInformation(string $dir): array
     {
         $information = [];
 
-        foreach ($this->fileHelper->findFiles($dir) as $file) {
+        foreach ($this->_fileHelper->findFiles($dir) as $file) {
             try {
                 $class = new ReflectionClass($file);
 

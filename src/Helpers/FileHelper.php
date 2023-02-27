@@ -65,7 +65,7 @@ class FileHelper
      *
      * @param string $dir Destination directory path
      *
-     * @return array
+     * @return array<int, mixed>
      */
     public function findFiles(string $dir): array
     {
@@ -81,7 +81,11 @@ class FileHelper
                     $className = sprintf(
                         "%s\\%s",
                         rtrim($namespace, '\\'),
-                        str_replace('/', '\\', str_replace('.php', '', $file->getRelativePathname()))
+                        str_replace(
+                            '/',
+                            '\\',
+                            str_replace('.php', '', $file->getRelativePathname())
+                        )
                     );
 
                     if (class_exists($className) === true) {
@@ -104,7 +108,9 @@ class FileHelper
     public function getDefinedNamespaces(): array
     {
         try {
-            $composerConfig = file_get_contents(sprintf('%s/composer.json', $this->_rootDirectory));
+            $composerConfig = file_get_contents(
+                sprintf('%s/composer.json', $this->_rootDirectory)
+            );
 
             if ($composerConfig !== false) {
                 $composerConfig = json_decode($composerConfig);

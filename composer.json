@@ -21,7 +21,7 @@
         "test": "phpunit tests",
         "validation:code": [
             "phpcs src tests",
-            "phpstan analyse src tests"
+            "phpstan analyse -l 8 src tests"
         ]
     },
     "minimum-stability": "stable",
