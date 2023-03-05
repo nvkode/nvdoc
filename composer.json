@@ -3,7 +3,7 @@
     "description": "Documentation generator for Symfony projects.",
     "type": "library",
     "license": "MIT",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "autoload": {
         "psr-4": {
             "Nvkode\\Nvdoc\\": "src/",
@@ -31,7 +31,7 @@
         "phpstan/phpstan": "^1.10"
     },
     "require": {
-        "symfony/finder": "^5.0",
+        "symfony/finder": ">= 5.0",
         "php": ">= 8.1"
     }
 }
